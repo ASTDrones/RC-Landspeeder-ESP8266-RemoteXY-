@@ -64,7 +64,7 @@ Grab the printable parts here:
 - ESP8266 board package  
 - Libraries: **RemoteXY**, **Servo**
 
-**Sketch:** `src/Landspeeder_RemoteXY.ino`
+**Sketch:** `src/RC_Landspeeder_ESP8266_RemoteXY.ino`
 
 ### Config options (edit in the sketch)
 
