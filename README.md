@@ -1,84 +1,103 @@
 # RC Landspeeder (ESP8266 + RemoteXY)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Board](https://img.shields.io/badge/Board-ESP8266%20(D1%20mini)-blue)
+![App](https://img.shields.io/badge/App-RemoteXY-blueviolet)
+
 <p align="center">
   <img src="landspeeder_hero.jpg" alt="Two RC Landspeeders on tarmac" width="100%">
 </p>
 
-Drive a Star-Wars-style landspeeder with your **phone**. This project uses a **Wemos/LOLIN D1 mini (ESP8266)** and the **RemoteXY** app running as a Wi-Fi access point, so it works anywhere—no internet required.
+Control a Star-Wars-style **RC Landspeeder** with your **phone**.  
+Built on a **Wemos/LOLIN D1 mini (ESP8266)** and the **RemoteXY** app running as a Wi-Fi access point — no internet required.
 
 ---
 
-## TL;DR (Quick Start)
+## Quick demo
+
+<p align="center">
+  <img src="landspeeder_demo.gif" alt="RC Landspeeder driving demo GIF" width="720">
+</p>
+
+---
+
+## TL;DR
 
 1. Open `src/Landspeeder_RemoteXY.ino` in Arduino IDE.  
-2. Boards Manager: install **ESP8266** platform; select **LOLIN(WEMOS) D1 R2 & mini**.  
-3. Libraries: install **RemoteXY (v3.1.13+)**; **Servo** comes with the ESP8266 core.  
-4. Flash the sketch.  
-5. On your phone, install **RemoteXY**, choose **Wi-Fi Point**, connect to SSID **`Landspeeder`** (no password by default), port **6377**.  
-6. Controls:  
-   - **Throttle slider** → `-100..100` (neutral = 0)  
-   - **Steering joystick (X)** → `-100..100`  
-7. First power-up: wheels off the ground—ESC holds **neutral ~1s** to arm/beep cleanly.
+2. Install **ESP8266** board support; select **LOLIN (WEMOS) D1 R2 & mini**.  
+3. Libraries: **RemoteXY (v3.1.13+)** and **Servo** (bundled with ESP8266 core).  
+4. Flash, then in RemoteXY choose **Wi-Fi Point** and connect to SSID **`Landspeeder`**, port **6377**.  
+5. Controls: **Throttle** slider (−100..100), **Steering** joystick **X** (−100..100).  
+6. First power-up: wheels off ground — ESC holds **neutral ~1s** to arm/beep cleanly.
+
+---
+
+## 3D Files (MakerWorld)
+
+Grab the printable parts here:  
+**https://makerworld.com/en/@pumpkin20303**
 
 ---
 
 ## Hardware
 
 - Wemos/LOLIN **D1 mini (ESP8266)**
-- Car **ESC** + motor (per ESC)
-- Standard **steering servo**
-- Power: ESC **BEC 5V** to the D1 mini (or a separate 5V **UBEC**)
-- Common ground between ESC/servo/D1 mini
+- **Car ESC** + motor (per ESC)
+- **Steering servo**
+- Power via ESC **BEC 5V** or a separate **UBEC** (grounds common)
 
 ### Wiring
 
-| Function | ESP8266 pin | Notes |
+| Function | ESP8266 Pin | Notes |
 |---|---|---|
 | Steering servo signal | **D1 (GPIO5)** | ~1500 µs center, ±400 µs travel |
 | ESC signal | **D2 (GPIO4)** | 1500 µs neutral; 1000/2000 µs min/max |
-| 5V / GND | 5V / G | From ESC BEC or UBEC; **grounds common** |
+| 5V / GND | 5V / G | From ESC BEC or UBEC; **common ground** |
 
-> If the ESP ever reboots under load, add a **470–1000 µF** capacitor across 5V/GND near the D1 mini or power it from a UBEC.
+> If the ESP ever reboots under load, add a **470–1000 µF** capacitor at 5V/GND near the D1 mini or use a UBEC.
 
 ---
 
 ## Software / Build
 
-- Arduino IDE or Arduino CLI  
-- **ESP8266** board package  
-- Libraries: **RemoteXY 3.1.13+**, **Servo** (bundled)
+- Arduino IDE (or Arduino CLI)  
+- ESP8266 board package  
+- Libraries: **RemoteXY**, **Servo**
 
-Typical board settings: 80 MHz, 4M (FS: none), 115200 baud.
+**Sketch:** `src/Landspeeder_RemoteXY.ino`
 
-Sketch location: `src/Landspeeder_RemoteXY.ino`
+### Config options (edit in the sketch)
 
-Key pins & controls in the sketch:
-- **D1** = steering servo, **D2** = ESC  
-- **Throttle** comes from `RemoteXY.Throttle`  
-- **Steering** comes from `RemoteXY.joystick_01_x`  
+- Pins: `STEERING_PIN = D1`, `ESC_PIN = D2`  
+- Steering: `SERVO_CENTER_US = 1500`, `SERVO_RANGE_US = 400`  
+- ESC: `ESC_MIN_US = 1000`, `ESC_NEUTRAL_US = 1500`, `ESC_MAX_US = 2000`  
+- Direction flips: `REVERSE_THR` / `REVERSE_STR`  
+- Wi-Fi SSID: `Landspeeder` (set a password if desired)
+
+Key bits:
+- **Throttle** = `RemoteXY.Throttle`  
+- **Steering** = `RemoteXY.joystick_01_x`  
 - Neutral is held on boot and when the app disconnects.
-
-To flip a channel, set `REVERSE_THR` or `REVERSE_STR` to `true`.
 
 ---
 
 ## RemoteXY App
 
-- Install **RemoteXY** on your phone.  
-- Connect to **Wi-Fi Point**:
-  - **SSID:** `Landspeeder`
-  - **Password:** *(empty unless you change it in the sketch)*
-  - **Port:** `6377`
-- The UI is embedded in firmware (`RemoteXY_CONF[]`), so it loads automatically.
+- Install the **RemoteXY** mobile app.  
+- Connect to **Wi-Fi Point**  
+  - **SSID:** `Landspeeder`  
+  - **Password:** *(blank unless you changed it)*  
+  - **Port:** `6377`  
+- The UI is embedded in firmware (`RemoteXY_CONF[]`) and loads automatically.
 
 ---
 
 ## Troubleshooting
 
-- **Motor spins during beeps / no arming:** ESC not seeing neutral or the ESC is faulty. This sketch holds 1500 µs on boot; try another ESC or flip throttle direction.
-- **ESP resets under throttle:** BEC sag. Add a **470–1000 µF** cap on 5 V at the D1 mini or use a **UBEC**.
-- **Steering/throttle reversed:** set `REVERSE_THR` / `REVERSE_STR = true;`
-- **Endpoints feel short/long:** tweak `SERVO_RANGE_US` (steering) or min/max µs for ESC.
+- **Motor spins during beeps / won’t arm:** ESC not seeing neutral or faulty ESC. This sketch holds 1500 µs at boot; try another ESC or invert throttle.  
+- **ESP resets under throttle:** BEC sag → add **470–1000 µF** cap or use a **UBEC**.  
+- **Steering/throttle reversed:** set `REVERSE_THR` / `REVERSE_STR = true;`  
+- **Throw feels off:** tweak `SERVO_RANGE_US` or ESC min/max µs.
 
 ---
 
@@ -92,22 +111,13 @@ To flip a channel, set `REVERSE_THR` or `REVERSE_STR` to `true`.
 
 ## Social Preview
 
-GitHub uses a repository **social preview** when links are shared.  
-Upload **`landspeeder_social.jpg`** in your repo:
+Upload **`landspeeder_social.jpg`** (1280×640) so the repo shows a nice banner when shared:
 
 1. Repo → **Settings → General → Social preview**  
-2. Click **Upload an image** and choose `landspeeder_social.jpg` (1280×640).
+2. **Upload an image** → choose `landspeeder_social.jpg`
 
 ---
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
----
-
-## Credits
-
-- Remote UI powered by **RemoteXY**  
-- ESP8266 board: **Wemos/LOLIN D1 mini**  
-- Project, wiring, and code assembled by the community & this repo’s maintainer.
