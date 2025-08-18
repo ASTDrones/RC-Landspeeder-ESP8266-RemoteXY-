@@ -23,7 +23,7 @@ Built on a **Wemos/LOLIN D1 mini (ESP8266)** and the **RemoteXY** app running as
 
 ## TL;DR
 
-1. Open `src/Landspeeder_RemoteXY.ino` in Arduino IDE.  
+1. Open `src/RC_Landspeeder_ESP8266_RemoteXY.ino` in Arduino IDE.  
 2. Install **ESP8266** board support; select **LOLIN (WEMOS) D1 R2 & mini**.  
 3. Libraries: **RemoteXY (v3.1.13+)** and **Servo** (bundled with ESP8266 core).  
 4. Flash, then in RemoteXY choose **Wi-Fi Point** and connect to SSID **`Landspeeder`**, port **6377**.  
