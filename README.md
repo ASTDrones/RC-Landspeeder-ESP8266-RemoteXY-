@@ -35,7 +35,7 @@ Built on a **Wemos/LOLIN D1 mini (ESP8266)** and the **RemoteXY** app running as
 ## 3D Files (MakerWorld)
 
 Grab the printable parts here:  
-**https://makerworld.com/en/@pumpkin20303**
+**[https://makerworld.com/en/@pumpkin20303](https://makerworld.com/en/models/1711304-luke-skywalker-s-mini-rc-landspeeder#profileId-1815867)**
 
 ---
 
